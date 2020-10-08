@@ -64,7 +64,7 @@ class App(object):
         )
 
         self.top_journals = widgets.IntSlider(
-            value=10,
+            value=100,
             min=3,
             max=50,
             step=1,
@@ -113,7 +113,7 @@ class App(object):
         )
 
         self.email_field = widgets.Text(
-            value='peter.just@intonumbers.com',
+            value='',
             placeholder='enter your email',
             layout=widgets.Layout(width='auto', grid_area='email_field'),
         )
