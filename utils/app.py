@@ -64,7 +64,7 @@ class App(object):
         )
 
         self.top_journals = widgets.IntSlider(
-            value=100,
+            value=10,
             min=3,
             max=50,
             step=1,
@@ -123,7 +123,7 @@ class App(object):
                  style=widgets.ButtonStyle(button_color='lightblue'))
 
         self.max_results = widgets.IntSlider(
-            value=10,
+            value=100,
             min=1,
             max=500,
             step=1,
@@ -234,50 +234,62 @@ class App(object):
             self.clean_data()
             self.generate_wordclouds()
             
+    def _validate_mail(self):  
+        if(re.search('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$', self.email_field.value)):  
+            return True      
+        return False
+    
     def search_ids_button_clicked(self, search_ids_button):
         self.raw_data = []
         with self.output:
-            clear_output()
-            print('Downloading data')
-            pmq = PubMedQuery(email=self.email_field.value)
-
-
-            results = pmq.query_ids(id_string=self.search_ids_field.value)
-
-
-            try:
-                for article in results:
-                    self.raw_data.append(article.toJSON()) 
-            except:
+            if self._validate_mail():
                 clear_output()
-                print('Please provide valid PubMedIDs')
-                return None
+                print('Downloading data')
+                pmq = PubMedQuery(email=self.email_field.value)
 
-            clear_output()
-            print('Downloaded publications based on your search term: {}'.format(len(self.raw_data)))
-            display(self.cloud_box)
-    
+                results = pmq.query_ids(id_string=self.search_ids_field.value)
+
+                try:
+                    for article in results:
+                        self.raw_data.append(article.toJSON()) 
+                except:
+                    clear_output()
+                    print('Please provide valid PubMedIDs')
+                    return None
+
+                clear_output()
+                print('Downloaded publications based on your search term: {}'.format(len(self.raw_data)))
+                display(self.cloud_box)
+            else: 
+                clear_output()
+                print('Please enter a valid email address')
+
     def search_term_button_clicked(self, search_term_button):
         self.raw_data = []
         with self.output:
-            clear_output()
-            print('Downloading data')
-
-            pmq = PubMedQuery(email=self.email_field.value)
-            
-            try:
-                results = pmq.query(query=self.search_term_field.value, max_results=self.max_results.value)
-            except:
+            if self._validate_mail():
                 clear_output()
-                print('Please provide a search term')
-                return None
+                print('Downloading data')
 
-            for article in results:
-                self.raw_data.append(article.toJSON()) 
+                pmq = PubMedQuery(email=self.email_field.value)
+                
+                try:
+                    results = pmq.query(query=self.search_term_field.value, max_results=self.max_results.value)
+                except:
+                    clear_output()
+                    print('Please provide a search term')
+                    return None
 
-            clear_output()
-            print('Downloaded publications based on your search term: {}'.format(len(self.raw_data)))
-            display(self.cloud_box)
+                for article in results:
+                    self.raw_data.append(article.toJSON()) 
+
+                clear_output()
+                print('Downloaded publications based on your search term: {}'.format(len(self.raw_data)))
+                display(self.cloud_box)
+            else: 
+                clear_output()
+                print('Please enter a valid email address')
+        
     
     def stringify_search_ids(self):
         return ', '.join(self.search_ids)
@@ -359,12 +371,6 @@ class App(object):
         nltk_tokens = word_tokenize(t_text)
         every_gram_list = list(everygrams(nltk_tokens, min_len=self.min_grams.value, max_len=self.max_grams.value))
         return(every_gram_list)
-
-    def _validate_mail(self, mail):  
-            if(re.search('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$', mail)):  
-                return(mail)       
-            else:  
-                raise Exception("Please enter a valid Mailadress in the Config Section (first cell)")
 
     def _data_process(self, dp_text):
 
