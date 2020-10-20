@@ -8,7 +8,9 @@ A Jupyter notebook for creating word-clouds based on titles, abstracts, keywords
 ## Quick Guide
 
 1. run the code cell and wait until the user interface appears
+
 2. enter your email address (reqired for PubMed)
+
 3. execute your search
     - you can search for specific PubMed IDs (comma seperated), eg: 31351196, 29782946, 27019357
     - or query for a search term ("Max Results" defines them maximum number of downloaded publications based on your search term)
@@ -20,8 +22,10 @@ A Jupyter notebook for creating word-clouds based on titles, abstracts, keywords
     - **Long Gram Weight:** defines if terms with more words should be weighted higher in the wordclouds
     - **Remove Incomplete Author Names:** defines if authors with missing given- or family-names should appear in the author wordcloud
     - **Remove Isolated Numbers:** defines if numbers should be ignored for the visualization
+
 5. click "GENERATE GRAPHS"
     - **IMPORTANT:** if you only want to change any visualization settings, you don't have to repeat your search, just change the desired parameters and re-generate the grpahs. 
+
 6. Visualization description:
     - **Overall Wordcloud:** represents the frequency of each term
     - **Publication Wordcloud:** represents the frequency of publications each term is found in
